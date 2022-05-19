@@ -1,10 +1,11 @@
 import React from 'react'
 import { useEffect, useCallback, useState } from 'react'
-import { TouchableOpacity, FlatList } from 'react-native';
+import { TouchableOpacity, FlatList, RefreshControl} from 'react-native';
 import PalettePreview from '../components/PalettePreview';
 
 const Home = ({ navigation }) => {
   const [ colorPalettes, setColorPalettes ] = useState([]);
+  const [isRefreshing, setIsRefreshing ] = useState(false);
   const colorPaletteApi = 'https://color-palette-api.kadikraman.vercel.app/palettes';
   const fetchColorPalettes = useCallback(async() => {
     const result = await fetch(colorPaletteApi);
@@ -14,6 +15,13 @@ const Home = ({ navigation }) => {
       setColorPalettes(palettes)
     }
   });
+  const handleRefresh = useCallback(async()=>{
+    setIsRefreshing(true);
+    await fetchColorPalettes();
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 1000);
+  }, [])
 
   useEffect(() => {
     fetchColorPalettes();
@@ -29,8 +37,10 @@ const Home = ({ navigation }) => {
          }}
         >
           <PalettePreview palette={item} numToShow={5} />
-        </TouchableOpacity> 
+        </TouchableOpacity>
       )}
+      refreshing={isRefreshing}
+      onRefresh={handleRefresh}
     />
 
   )
