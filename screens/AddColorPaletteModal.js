@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   FlatList,
   Alert,
@@ -9,26 +9,8 @@ import {
   TextInput, 
   TouchableOpacity
 } from 'react-native';
-import { useCallback } from 'react/cjs/react.production.min';
 
-const COLORS = [
-  { colorName: 'AliceBlue', hexCode: '#F0F8FF' },
-  { colorName: 'AntiqueWhite', hexCode: '#FAEBD7' },
-  { colorName: 'Aqua', hexCode: '#00FFFF' },
-  { colorName: 'MediumAquaMarine', hexCode: '#66CDAA' },
-  { colorName: 'MediumBlue', hexCode: '#0000CD' },
-  { colorName: 'MediumOrchid', hexCode: '#BA55D3' },
-  { colorName: 'MediumPurple', hexCode: '#9370D8' },
-  { colorName: 'MediumSeaGreen', hexCode: '#3CB371' },
-  { colorName: 'MediumSlateBlue', hexCode: '#7B68EE' },
-  { colorName: 'MediumSpringGreen', hexCode: '#00FA9A' },
-  { colorName: 'MediumTurquoise', hexCode: '#48D1CC' },
-  { colorName: 'MediumVioletRed', hexCode: '#C71585' },
-  { colorName: 'MidnightBlue', hexCode: '#191970' },
-  { colorName: 'MintCream', hexCode: '#F5FFFA' },
-  { colorName: 'MistyRose', hexCode: '#FFE4E1' },
-  { colorName: 'Moccasin', hexCode: '#FFE4B5' }
-]
+import Colors from '../assets/data/colors'
 
 const AddColorPaletteModal = ({navigation}) => {
   const [paletteName, setPaletteName] = useState('');
@@ -41,7 +23,7 @@ const AddColorPaletteModal = ({navigation}) => {
       Alert.alert("Please add at least 3 colors")
     } else {
       const newColorPalette = {
-        name: paletteName,
+        paletteName: paletteName,
         colors: selectedColors
       }
       navigation.navigate("Home", { newColorPalette })
@@ -49,7 +31,7 @@ const AddColorPaletteModal = ({navigation}) => {
   }, [paletteName, selectedColors]);
 
   const handleValueChange = useCallback((value, color) => {
-    if (value ===true ) {
+    if (value === true ) {
       setSelectedColors(colors => [...colors, color])
     } else {
       setSelectedColors(colors => colors.filter(selectedColor => color.colorName !== selectedColor.colorName))
@@ -68,18 +50,18 @@ const AddColorPaletteModal = ({navigation}) => {
           />
       </View>
       <FlatList
-        data={COLORS}
-        keyExtractor={(color) => color.hexCode}
+        data={Colors}
+        keyExtractor={(item) => item.colorName}
         renderItem={({ item }) => (
           <View style={styles.color}>
-        <Text> {item.colorName}</Text>
-        <Switch 
-          value={!!selectedColors.find(
-            color => color.colorName === item.colorName
-          )} 
-          onValueChange={selected => { handleValueChange(selected, item)}} 
-        />
-      </View>
+            <Text> {item.colorName}</Text>
+            <Switch 
+              value={!!selectedColors.find(
+                color => color.colorName === item.colorName
+              )} 
+              onValueChange={selected => { handleValueChange(selected, item)}} 
+            />
+          </View>
         )}
       />
       <TouchableOpacity

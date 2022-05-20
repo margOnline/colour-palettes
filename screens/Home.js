@@ -20,7 +20,7 @@ const Home = ({ navigation, route }) => {
     await fetchColorPalettes();
     setTimeout(() => {
       setIsRefreshing(false);
-    }, 1000);
+    }, 500);
   }, [])
 
   useEffect(() => {
@@ -29,7 +29,7 @@ const Home = ({ navigation, route }) => {
 
   useEffect(() =>{
     if (newColorPalette) {
-      setColorPalettes(palettes => [newColorPalette, ...palettes])
+      setColorPalettes(current => [newColorPalette, ...current])
     }
   }, [newColorPalette])
   
