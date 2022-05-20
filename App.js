@@ -1,34 +1,43 @@
+import 'react-native-gesture-handler';
 import React from 'react';
-import { Text, View, SafeAreaView, StyleSheet } from 'react-native';
-import ColorBox from './components/ColorBox'
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import Home from './screens/Home';
+import ColorPalette from './screens/ColorPalette';
+import AddColorPaletteModal from './screens/AddColorPaletteModal';
+
+const MainStack = createStackNavigator();
+const RootStack = createStackNavigator();
+
+const MainStackScreen = () => {
+  return (
+    <MainStack.Navigator>
+      <MainStack.Screen name="Home" component={Home} />
+      <MainStack.Screen
+        name="ColorPalette"
+        component={ColorPalette}
+        options={({ route }) => ({ title: route.params.paletteName })}
+      />
+    </MainStack.Navigator>
+  );
+};
 
 const App = () => {
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        <View>
-          <Text style={styles.heading}>Some boxes of different colours</Text>
-        </View>
-        <ColorBox colorName="Cyan" hexCode="#2aa198" />
-        <ColorBox colorName="Blue" hexCode="#268bd2" />
-        <ColorBox colorName="Magenta" hexCode="#d33682" />
-        <ColorBox colorName="Orange" hexCode="#cb4b16" />
-      </View>
-    </SafeAreaView>
-  )
-
+    <NavigationContainer>
+      <RootStack.Navigator mode="modal">
+        <RootStack.Screen
+          name="Main"
+          component={MainStackScreen}
+          options={{ headerShown: false }}
+        />
+        <RootStack.Screen
+          name="AddColorPaletteModal"
+          component={AddColorPaletteModal}
+        />
+      </RootStack.Navigator>
+    </NavigationContainer>
+  );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: 50,
-    paddingHorizontal: 10,
-  },
-  heading: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10
-  }
-});
 
 export default App;
