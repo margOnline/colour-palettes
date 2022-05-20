@@ -1,9 +1,9 @@
-import React from 'react'
-import { useEffect, useCallback, useState } from 'react'
-import { TouchableOpacity, FlatList, RefreshControl} from 'react-native';
+import React, { useEffect, useCallback, useState } from 'react'
+import { StyleSheet, TouchableOpacity, FlatList, Text } from 'react-native';
 import PalettePreview from '../components/PalettePreview';
 
-const Home = ({ navigation }) => {
+const Home = ({ navigation, route }) => {
+  const newColorPalette = route.params ? route.params.newColorPalette : undefined;
   const [ colorPalettes, setColorPalettes ] = useState([]);
   const [isRefreshing, setIsRefreshing ] = useState(false);
   const colorPaletteApi = 'https://color-palette-api.kadikraman.vercel.app/palettes';
@@ -26,6 +26,12 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     fetchColorPalettes();
   }, [])
+
+  useEffect(() =>{
+    if (newColorPalette) {
+      setColorPalettes(palettes => [newColorPalette, ...palettes])
+    }
+  }, [newColorPalette])
   
   return (
     <FlatList 
@@ -41,9 +47,32 @@ const Home = ({ navigation }) => {
       )}
       refreshing={isRefreshing}
       onRefresh={handleRefresh}
+      ListHeaderComponent={
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('AddColorPaletteModal');
+          }}
+        >
+          <Text style={styles.buttonText}>Add a color scheme</Text>
+        </TouchableOpacity>
+      }
     />
 
   )
 }
+
+const styles = StyleSheet.create({
+  list: {
+    padding: 5,
+    backgroundColor: 'white'
+  },
+  buttonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'teal',
+    marginVertical: 10,
+    marginLeft: 5
+  }
+})
 
 export default Home;

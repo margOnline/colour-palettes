@@ -21,11 +21,10 @@ const styles = StyleSheet.create({
   container: {
     paddingTop: 10,
     paddingHorizontal: 10,
-    paddingBottom: 10,
   },
   paletteHeader: {
     fontWeight: 'bold',
-    marginBotton: 10,
+    paddingBottom: 10,
     fontSize: 18,
   },
   colorBox: {
@@ -39,7 +38,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   list: {
-    marginBottom: 20,
+    marginBottom: 10,
     flexDirection: 'row'
   }
 })
